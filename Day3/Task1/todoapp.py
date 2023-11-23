@@ -9,6 +9,7 @@ help_message = """• add -> add a task to the to-do list.
 
 todo_list = []
 completed_tasks = []
+incomplete_tasks = []
 
 class TodoManager:
     id_counter = 1
@@ -24,6 +25,7 @@ print(help_message)
 todo = True
 
 while todo:
+    print()
     command = input('Enter the command for todo_list: ').lower().strip()
     if command in all_commands:
         if command == 'add':
@@ -49,29 +51,50 @@ while todo:
             if is_in_todo:
                 if not is_completed:
                     is_in_todo[0]['completed'] = 'True'
-                    print(is_in_todo)
                     completed_tasks.append(is_in_todo[0])
+                    for a in range(len(completed_tasks)):
+                        print('---------------------------------------------')
+                        for x, y in completed_tasks[a].items():
+                            print(f'{x} : {y}')
+                        print('---------------------------------------------')
+                            
                 else:
                     print('Task was already completed!!')
                 
         elif command == 'viewall':
             if todo_list:
-                for x in todo_list:
-                    print(x)
+                for a in range(len(todo_list)):
+                        print('---------------------------------------------')
+                        for x, y in todo_list[a].items():
+                            print(f'{x} : {y}')
+                        print('---------------------------------------------')
             else:
                 print('Your todo list is empty!')
                 
         elif command == 'viewcomplete':
             if completed_tasks:
-                for x in completed_tasks:
-                    print(x)
+                # for x in completed_tasks:
+                #     print(x)
+                for a in range(len(completed_tasks)):
+                        print('---------------------------------------------')
+                        for x, y in completed_tasks[a].items():
+                            print(f'{x} : {y}')
+                        print('---------------------------------------------')
             else:
                 print('No task has been completed yet!!')
 
         elif command == 'viewincomplete':
             for x in todo_list:
                 if x not in completed_tasks:
-                    print(x)
+                    if x not in incomplete_tasks:
+                        incomplete_tasks.append(x)
+
+            if incomplete_tasks:
+                for a in range(len(incomplete_tasks)):
+                    print('---------------------------------------------')
+                    for x, y in incomplete_tasks[a].items():
+                        print(f'{x} : {y}')
+                    print('---------------------------------------------')
                     
         elif command == 'help':
             print(help_message)
