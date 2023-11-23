@@ -10,6 +10,15 @@ help_message = """• add -> add a task to the to-do list.
 todo_list = []
 completed_tasks = []
 
+class TodoManager:
+    id_counter = 1
+    
+    @classmethod
+    def get_next_id(cls):
+        next_id = cls.id_counter
+        cls.id_counter += 1
+        return next_id
+
 all_commands = ['add', 'complete', 'viewall', 'viewcomplete', 'viewincomplete', 'help', 'exit']
 print(help_message)
 todo = True
@@ -20,8 +29,10 @@ while todo:
         if command == 'add':
             try:
                 todo_dict = {}
-                todo_dict['task_id'] = int(input('Enter the id of task: '))
+                todo_dict['task_id'] = TodoManager.get_next_id()
                 todo_dict['task_name'] = str(input('Enter the name of task: '))
+                todo_dict['task_desc'] = str(input('Enter the Description for task: '))
+                todo_dict['completed'] = 'False'
                 already_in_todo = [x for x in todo_list if todo_dict['task_id'] == x['task_id']]
                 if already_in_todo:
                     print('Task is already in todo list!')
@@ -30,13 +41,18 @@ while todo:
             except ValueError:
                 print('Please enter a valid Input')
             
+                
         elif command == 'complete':
             task_id = int(input('Enter the id of the task: '))
-            matching_task = next((x for x in todo_list if x['task_id'] == task_id), None)
-            if matching_task:
-                completed_tasks.append(matching_task)
-            else:
-                print('Task not found in the todo list.')
+            is_in_todo = [x for x in todo_list if x['task_id'] == task_id]
+            is_completed = [x for x in completed_tasks if x['task_id'] == task_id]
+            if is_in_todo:
+                if not is_completed:
+                    is_in_todo[0]['completed'] = 'True'
+                    print(is_in_todo)
+                    completed_tasks.append(is_in_todo[0])
+                else:
+                    print('Task was already completed!!')
                 
         elif command == 'viewall':
             if todo_list:
