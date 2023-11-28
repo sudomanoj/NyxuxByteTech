@@ -1,6 +1,16 @@
 inventory_list = []
 from abc import ABC, abstractmethod
 
+class Idcounter:
+    id = 1
+    
+    @classmethod
+    def get_next_id(cls):
+        next_id = cls.id
+        cls.id += 1
+        return next_id
+        
+
 class AbstractInventory(ABC):
     @abstractmethod
     def add_item(self):
@@ -33,8 +43,13 @@ class InventoryItem(AbstractInventory):
     def add_item(self):
         if self.price > 0 and self.quantity >1:
             inventory_dict = {'name':self.name, 'price':self.price, 'quantity':self.quantity, 'category':self.category}
-            inventory_list.append(inventory_dict)
-            print('add_item called')
+            item_in_list = [item for item in inventory_list if item['name'] == self.name]
+            if not item_in_list:
+                inventory_list.append(inventory_dict)
+            if item_in_list:
+                for item in inventory_list:
+                    if (item['name'] == self.name):
+                        item['quantity'] += self.quantity
         
 
     def remove_item(self):
@@ -64,31 +79,29 @@ class InventoryItem(AbstractInventory):
                 new_quantity = int(input(f'Enter the new quantity of the item {name}: '))
             except:
                 new_quantity = None
-            try:
-                new_category = str(input(f'Enter the new category of the item {name}: '))
-            except:
-                new_category = None    
-            
-                
+
+            new_category = str(input(f'Enter the new category of the item {name}: '))
+                        
             for item in inventory_list:
                 if is_product_there[0] == item:
                     if new_price is not None:
                         item['price'] = new_price
-                        
 
                     if new_quantity is not None:
                         item['quantity'] = new_quantity
 
-                    if new_category is not None:
+                    if len(new_category) > 0:
                         item['category'] = new_category
+                        
         else:
             print(f'Item {name} is not present in the inventory!!')         
             
     def view_invettory(self):
         if inventory_list:
-            for x in range(len(inventory_list)):
+            sorted_inventory_list = sorted(inventory_list, key=lambda x : x['name'])
+            for x in range(len(sorted_inventory_list)):
                 print()
-                for key, value in inventory_list[x].items():
+                for key, value in sorted_inventory_list[x].items():
                     print(f'{key}   {value}') 
                 print()
                     
